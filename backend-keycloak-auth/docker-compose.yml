@@ -5,11 +5,11 @@ services:
     image: postgres:13.5
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: lelek337
+      POSTGRES_USER: my_admin
+      POSTGRES_PASSWORD: my_password
       POSTGRES_DB: keycloak_db
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
   kc:
@@ -19,8 +19,8 @@ services:
       DB_ADDR: db
       DB_SCHEMA: public
       DB_DATABASE: keycloak_db
-      DB_USER: postgres
-      DB_PASSWORD: lelek337
+      DB_USER: my_admin
+      DB_PASSWORD: my_password
       KEYCLOAK_HOSTNAME: backend-keycloak-auth
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
@@ -28,5 +28,7 @@ services:
       - "8080:8080"
     depends_on:
       - db
+
+
 volumes:
   db_data:

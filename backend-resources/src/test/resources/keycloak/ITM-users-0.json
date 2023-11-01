@@ -1,0 +1,59 @@
+{
+  "realm" : "ITM",
+  "users" : [ {
+    "id" : "cfa709c8-3719-46aa-bfae-89e8d319b92f",
+    "createdTimestamp" : 1698872194709,
+    "username" : "loan",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Loan",
+    "lastName" : "Gavrosh",
+    "email" : "gavr@mail.ru",
+    "credentials" : [ {
+      "id" : "7f030adb-3f42-413c-8dd3-2d230d41409c",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1698873242474,
+      "secretData" : "{\"value\":\"l6I1AAZlW7IajP6IKmBN6v7CDinCoBJD0mI9xBm5xJrFk2wMzKMCUNgBPHleLyS6K0JWDd5jVVL0XgW7Fu3iFQ==\",\"salt\":\"qzmsuSySI1ZE1yjGhPNjNw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-itm" ],
+    "notBefore" : 0,
+    "groups" : [ "/Moderators" ]
+  }, {
+    "id" : "fa9ded56-a67e-4b44-85f9-f1337182a117",
+    "createdTimestamp" : 1698871300764,
+    "username" : "service-account-backend-gateway-client",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "serviceAccountClientId" : "backend-gateway-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-itm" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "73acc183-e594-4c48-bf65-aeaf27d73171",
+    "createdTimestamp" : 1698871579967,
+    "username" : "service-account-backend-resources",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "serviceAccountClientId" : "backend-resources",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-itm" ],
+    "clientRoles" : {
+      "realm-management" : [ "manage-users", "manage-events" ],
+      "account" : [ "manage-account-links", "manage-account", "manage-consent" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

@@ -1,56 +1,52 @@
 package com.itm.space.backendresources.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itm.space.backendresources.keycloak.KeycloakTest;
-import com.itm.space.backendresources.service.UserService;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.Map;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
 
 import static io.restassured.RestAssured.given;
+import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-//@SpringBootTest
-//@ActiveProfiles("test")
 public class UserControllerTest extends KeycloakTest{
 
-   private String getToken() {
-       assertTrue(keycloakContainer.isRunning());
-       String authServerUrl = keycloakContainer.getAuthServerUrl();
-       System.out.println("authServerUrl = "+ authServerUrl);
+       private String getToken() {
+           try (Keycloak keycloakClient = KeycloakBuilder.builder()
+                   .serverUrl(keycloakContainer.getAuthServerUrl())
+                   .grantType("password")
+                   .realm("ITM")
+                   .clientId("backend-gateway-client")
+                   .username("loan")
+                   .password("test")
+                   .clientSecret("4gKxjs5ECAqKL0KkPldoyeFfLUCZL3hg")
+                   .build()) {
+               String access_token = keycloakClient.tokenManager().getAccessToken().getToken();
+               return "Bearer " + access_token;
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+           return null;
+       }
+    @Test
+    void testMethod_hello() {
+        Response response = given()
+                .header(AUTHORIZATION, getToken())
+                .when()
+                .get( "/api/users/hello");
+        response.then().statusCode(200);
 
-       return given().contentType("application/x-www-form-urlencoded")
-               .formParams(Map.of(
-                       "username", "test",
-                       "password", "test",
-                       "grant_type", "password",
-                       "client_id", "backend-gateway-client",
-                       "client_secret", "secret"
-               ))
-               .post(keycloakContainer.getAuthServerUrl() + "/realms/ITM/protocol/openid-connect/token")
-               .then().assertThat().statusCode(200).extract()
-               .path("access_token");
-   }
-
+        assertEquals("cfa709c8-3719-46aa-bfae-89e8d319b92f", response.getBody().asString());
+        System.out.println("token = " + getToken());
+    }
 
     @Test
     // По токену получаем данные пользователя
     void testUserInfo() {
-        Response response = given().auth().oauth2(getToken()).when()
-                .get("http://localhost:9191/api/users/d54a5ada-fbbd-4491-b198-3681ca070d5b");
+        System.out.println(getToken());
+        Response response = given().header(AUTHORIZATION, getToken()).when()
+                .get("api/users/cfa709c8-3719-46aa-bfae-89e8d319b92f");
         response.then()
                 .statusCode(200)
                 .body("firstName", equalTo("Loan"))
@@ -58,8 +54,5 @@ public class UserControllerTest extends KeycloakTest{
                 .body("email", equalTo("gavr@mail.ru"));
 
         System.out.println(response.getBody().asString());
-
-//        assertEquals("  ", response.getBody().asString());
     }
-
 }
